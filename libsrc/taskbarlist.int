@@ -1,0 +1,54 @@
+!Generated .INC file (by the EasyCOM2INC v 2.14)
+!IDL filename: taskbarlist.idl
+
+!*********** Interfaces ***********
+!ITaskbarList3
+!*********** End of Interfaces ***********
+
+!*********** Data types ***********
+
+TBPFLAG                       EQUATE(LONG)
+TBPF_NOPROGRESS               EQUATE(0)
+TBPF_INDETERMINATE            EQUATE(1)
+TBPF_NORMAL                   EQUATE(2)
+TBPF_ERROR                    EQUATE(4)
+TBPF_PAUSED                   EQUATE(8)
+
+!*********** End of Data types ***********
+
+
+!*********** interfaces ***********
+IID_ITaskbarList3             GROUP
+data1                           LONG(0EA1AFB91H)
+data2                           SHORT(9E28H)
+data3                           SHORT(4B86H)
+data4                           STRING('<90H><0E9H><9EH><9FH><8AH><5EH><0EFH><0AFH>')
+                              END
+ITaskbarList3                 INTERFACE(IUnknown),COM,TYPE
+HrInit                          PROCEDURE(),HRESULT,RAW,PROC
+AddTab                          PROCEDURE(long hWnd),HRESULT,RAW,PROC
+DeleteTab                       PROCEDURE(long hWnd),HRESULT,RAW,PROC
+ActivateTab                     PROCEDURE(long hWnd),HRESULT,RAW,PROC
+SetActiveAlt                    PROCEDURE(long hWnd),HRESULT,RAW,PROC
+MarkFullscreenWindow            PROCEDURE(long hWnd,bool fFullscreen),HRESULT,RAW,PROC
+SetProgressValue                PROCEDURE(long hWnd,long ullCompletedLo,long ullCompletedHi,long ullTotalLo,long ullTotalHi),HRESULT,RAW,PROC
+SetProgressState                PROCEDURE(long hWnd,TBPFLAG tbpFlags),HRESULT,RAW,PROC
+RegisterTab                     PROCEDURE(long hWndTab,long hWndMDI),HRESULT,RAW,PROC
+UnregisterTab                   PROCEDURE(long hWndTab),HRESULT,RAW,PROC
+SetTabOrder                     PROCEDURE(long hWndTab,long hWndInsertBefore),HRESULT,RAW,PROC
+SetTabActive                    PROCEDURE(long hWndTab,long hWndMDI,ulong tbatFlags),HRESULT,RAW,PROC
+ThumbBarAddButtons              PROCEDURE(long hWnd,ulong cButtons,long pButton),HRESULT,RAW,PROC
+ThumbBarUpdateButtons           PROCEDURE(long hWnd,ulong cButtons,long pButton),HRESULT,RAW,PROC
+ThumbBarSetImageList            PROCEDURE(long hWnd,long himl),HRESULT,RAW,PROC
+SetOverlayIcon                  PROCEDURE(long hWnd,long hIcon,BSTRING pszDescription),HRESULT,RAW,PROC
+SetThumbnailTooltip             PROCEDURE(long hWnd,BSTRING pszTip),HRESULT,RAW,PROC
+                              END
+
+!*********** Coclasses ***********
+!coclass TaskbarInstance                                                                                     
+IID_TaskbarInstance           GROUP
+data1                           LONG(56FDF344H)
+data2                           SHORT(0FD6DH)
+data3                           SHORT(11D0H)
+data4                           STRING('<95H><8AH><0H><60H><97H><0C9H><0A0H><90H>')
+                              END

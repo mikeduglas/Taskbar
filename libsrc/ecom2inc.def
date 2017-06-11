@@ -1,0 +1,622 @@
+  OMIT('EndOfInclude',_ECOM2INC_)
+_ECOM2INC_  EQUATE(1)
+
+
+  INCLUDE('svcom.inc'),ONCE
+
+OLE_COLOR               EQUATE(LONG)
+VARIANT_BOOL            EQUATE(SHORT)
+VBOOL                   EQUATE(VARIANT_BOOL)
+VARIANT_TRUE            EQUATE(-1)
+VARIANT_FALSE           EQUATE(0)
+VTRUE                   EQUATE(VARIANT_TRUE)
+VFALSE                  EQUATE(VARIANT_FALSE)
+Picture_COM             EQUATE(BSTRING)
+
+LPSTR                   EQUATE(LONG)
+LPWSTR                  EQUATE(LONG)
+LPCWSTR                 EQUATE(LONG)
+
+OLE_HANDLE              EQUATE(LONG)
+!OLE_XSIZE_HIMETRIC
+!OLE_YSIZE_HIMETRIC
+
+!// Typedefs for standard scalar types
+!
+!typedef long OLE_XPOS_PIXELS;
+!typedef long OLE_YPOS_PIXELS;
+!typedef long OLE_XSIZE_PIXELS;
+!typedef long OLE_YSIZE_PIXELS;
+!typedef float OLE_XPOS_CONTAINER;
+!typedef float OLE_YPOS_CONTAINER;
+!typedef float OLE_XSIZE_CONTAINER;
+!typedef float OLE_YSIZE_CONTAINER;
+!typedef enum { triUnchecked = 0, triChecked = 1, triGray = 2 } OLE_TRISTATE;
+!typedef VARIANT_BOOL OLE_OPTEXCLUSIVE;
+!typedef VARIANT_BOOL OLE_CANCELBOOL;
+!typedef VARIANT_BOOL OLE_ENABLEDEFAULTBOOL;
+OLE_XPOS_PIXELS       EQUATE(LONG)
+OLE_YPOS_PIXELS       EQUATE(LONG)
+OLE_XSIZE_PIXELS      EQUATE(LONG)
+OLE_YSIZE_PIXELS      EQUATE(LONG)
+OLE_XPOS_CONTAINER    EQUATE(REAL)
+OLE_YPOS_CONTAINER    EQUATE(REAL)
+OLE_XSIZE_CONTAINER   EQUATE(REAL)
+OLE_YSIZE_CONTAINER   EQUATE(REAL)
+OLE_TRISTATE          EQUATE(LONG)
+triUnchecked          EQUATE(0)
+triChecked            EQUATE(1)
+triGray               EQUATE(2)
+OLE_OPTEXCLUSIVE      EQUATE(VARIANT_BOOL)
+OLE_CANCELBOOL        EQUATE(VARIANT_BOOL)
+OLE_ENABLEDEFAULTBOOL EQUATE(VARIANT_BOOL)
+
+!MSDN:
+!The PICTURE enumeration values describe attributes of a picture object as returned through the IPicture::get_Attributes method.
+!typedef enum tagPICTURE
+!{
+!    PICTURE_SCALABLE       = 0x00000001,
+!    PICTURE_TRANSPARENT    = 0x00000002
+!} PICTURE;
+!PICTURE               EQUATE(LONG)
+PICTURE_SCALABLE      EQUATE(1)
+PICTURE_TRANSPARENT   EQUATE(2)
+
+!MSDN:
+!The COM CY and Visual Basic Currency type is a signed 64-bit integer in units of 1/10,000 (or 1/100 of a cent).
+!The currency type can accurately represent dollars and cents values, so it's good for financial calculations.
+!The range of the currency type is more than +/- 900 trillion, so it'll even cover calculations of the national debt, at least for the foreseeable future.
+!CURRENCY              EQUATE(REAL)
+!CY                    EQUATE(CURRENCY)
+!CY                    GROUP,TYPE
+!Lo                      ULONG
+!Hi                      LONG
+!                      END
+!CURRENCY              EQUATE(CY)
+
+!typedef /* [hidden][uuid] */  DECLSPEC_UUID("66504306-BE0F-101A-8BBB-00AA00300CAB") LONG OLE_XPOS_HIMETRIC;
+!typedef /* [hidden][uuid] */  DECLSPEC_UUID("66504307-BE0F-101A-8BBB-00AA00300CAB") LONG OLE_YPOS_HIMETRIC;
+!typedef /* [hidden][uuid] */  DECLSPEC_UUID("66504308-BE0F-101A-8BBB-00AA00300CAB") LONG OLE_XSIZE_HIMETRIC;
+!typedef /* [hidden][uuid] */  DECLSPEC_UUID("66504309-BE0F-101A-8BBB-00AA00300CAB") LONG OLE_YSIZE_HIMETRIC;
+OLE_XPOS_HIMETRIC     EQUATE(LONG)
+OLE_YPOS_HIMETRIC     EQUATE(LONG)
+OLE_XSIZE_HIMETRIC    EQUATE(LONG)
+OLE_YSIZE_HIMETRIC    EQUATE(LONG)
+
+LPCRECT               EQUATE(LONG)  !pointer to RECT struct
+
+!"7BF80980-BF32-101A-8BBB-00AA00300CAB"
+IID_IPicture          GROUP
+Data1                   LONG(07BF80980h)
+Data2                   SHORT(0BF32h)
+Data3                   SHORT(0101Ah)
+Data4                   STRING('<08Bh><0BBh><0><0AAh><0><30h><0Ch><0ABh>')
+                      END
+IPicture              INTERFACE(IUnknown),COM,TYPE
+get_Handle              PROCEDURE(*OLE_HANDLE pHandle),HRESULT,PROC
+get_hPal                PROCEDURE(*OLE_HANDLE phPal),HRESULT,PROC
+get_Type                PROCEDURE(*SHORT pType),HRESULT,PROC
+get_Width               PROCEDURE(*OLE_XSIZE_HIMETRIC pWidth),HRESULT,PROC
+get_Height              PROCEDURE(*OLE_YSIZE_HIMETRIC pHeight),HRESULT,PROC
+Render                  PROCEDURE(HDC hDC,LONG x,LONG y,LONG cx,LONG cy,              |
+                                  OLE_XPOS_HIMETRIC xSrc,OLE_YPOS_HIMETRIC ySrc,      |
+                                  OLE_XSIZE_HIMETRIC cxSrc,OLE_YSIZE_HIMETRIC cySrc,  |
+                                  LPCRECT pRcWBounds),HRESULT,PROC
+set_hPal                PROCEDURE(OLE_HANDLE hPal),HRESULT,PROC
+get_CurDC               PROCEDURE(*HDC phDC),HRESULT,PROC
+SelectPicture           PROCEDURE(HDC hDCIn,*HDC phDCOut,*OLE_HANDLE phBmpOut),HRESULT,PROC
+get_KeepOriginalFormat  PROCEDURE(*BOOL pKeep),HRESULT,PROC
+put_KeepOriginalFormat  PROCEDURE(BOOL keep),HRESULT,PROC
+PictureChanged          PROCEDURE(),HRESULT,PROC
+SaveAsFile              PROCEDURE(LONG pStream,BOOL fSaveMemCopy,*LONG pCbSize),HRESULT,PROC
+get_Attributes          PROCEDURE(*DWORD pDwAttr),HRESULT,PROC
+                      END
+
+!"7BF80981-BF32-101A-8BBB-00AA00300CAB"
+IID_IPictureDisp      GROUP
+Data1                   LONG(07BF80981h)
+Data2                   SHORT(0BF32h)
+Data3                   SHORT(0101Ah)
+Data4                   STRING('<08Bh><0BBh><0><0AAh><0><30h><0Ch><0ABh>')
+                      END
+IPictureDisp          INTERFACE(IDispatch),COM,TYPE
+                      END
+Picture               INTERFACE(IPictureDisp),COM,TYPE
+                      END
+
+!"BEF6E002-A874-101A-8BBA-00AA00300CAB"
+_IFont                GROUP
+Data1                   LONG(0BEF6E002h)
+Data2                   SHORT(0A874h)
+Data3                   SHORT(0101Ah)
+Data4                   STRING('<08Bh><0BAh><0><0AAh><0><30h><0Ch><0ABh>')
+                      END
+IFont                 INTERFACE(IUnknown),COM,TYPE
+get_Name                PROCEDURE(*BSTR pName),HRESULT,PROC
+put_Name                PROCEDURE(BSTR pName),HRESULT,PROC
+get_Size                PROCEDURE(*CY pSize),HRESULT,PROC
+put_Size                PROCEDURE(CY size),HRESULT,PROC
+get_Bold                PROCEDURE(*BOOL pBold),HRESULT,PROC
+put_Bold                PROCEDURE(BOOL bold),HRESULT,PROC
+get_Italic              PROCEDURE(*BOOL pItalic),HRESULT,PROC
+put_Italic              PROCEDURE(BOOL italic),HRESULT,PROC
+get_Underline           PROCEDURE(*BOOL pUnderline),HRESULT,PROC
+put_Underline           PROCEDURE(BOOL underline),HRESULT,PROC
+get_Strikethrough       PROCEDURE(*BOOL pStrikethrough),HRESULT,PROC
+put_Strikethrough       PROCEDURE(BOOL strikethrough),HRESULT,PROC
+get_Weight              PROCEDURE(*SHORT pWeight),HRESULT,PROC
+put_Weight              PROCEDURE(SHORT weight),HRESULT,PROC
+get_Charset             PROCEDURE(*SHORT pCharset),HRESULT,PROC
+put_Charset             PROCEDURE(SHORT charset),HRESULT,PROC
+get_hFont               PROCEDURE(*HFONT phFont),HRESULT,PROC
+Clone                   PROCEDURE(LONG ppFont),HRESULT,PROC
+IsEqual                 PROCEDURE(*IFont pFontOther),HRESULT,PROC
+SetRatio                PROCEDURE(LONG cyLogical,LONG cyHimetric),HRESULT,PROC
+QueryTextMetrics        PROCEDURE(*TEXTMETRICOLE pTM),HRESULT,PROC
+AddRefHfont             PROCEDURE(HFONT hFont),HRESULT,PROC
+ReleaseHfont            PROCEDURE(HFONT hFont),HRESULT,PROC
+SetHdc                  PROCEDURE(HDC hDC),HRESULT,PROC
+                     END
+
+!"BEF6E003-A874-101A-8BBA-00AA00300CAB"
+IID_IFontDisp         GROUP
+Data1                   LONG(0BEF6E003h)
+Data2                   SHORT(0A874h)
+Data3                   SHORT(0101Ah)
+Data4                   STRING('<08Bh><0BAh><0><0AAh><0><30h><0Ch><0ABh>')
+                      END
+IFontDisp             INTERFACE(IDispatch),COM,TYPE
+                      END
+Font                  INTERFACE(IFontDisp),COM,TYPE
+                      END
+_Font                 INTERFACE(Font),COM,TYPE
+                      END
+
+!DISPPARAMS
+!Used by IDispatch::Invoke to contain the arguments passed to a method or property.
+!For more information, see IDispatch::Invoke and Dispatch Interface and API Functions.
+!
+!typedef struct FARSTRUCT tagDISPPARAMS{
+!VARIANTARG FAR* rgvarg;            // Array of arguments.
+!   DISPID FAR* rgdispidNamedArgs;   // Dispatch IDs of named arguments.
+!   Unsigned int cArgs;            // Number of arguments.
+!   Unsigned int cNamedArgs;         // Number of named arguments.
+!} DISPPARAMS;
+! 
+DISPPARAMS            GROUP,TYPE
+rgvarg                  LONG
+rgdispidNamedArgs       LONG
+cArgs                   UNSIGNED
+cNamedArgs              UNSIGNED
+                      END
+
+!EXCEPINFO
+!Describes an exception that occurred during IDispatch::Invoke.
+!For more information on exceptions, see IDispatch::Invoke and Dispatch Interface and API Functions.
+!
+!typedef struct FARSTRUCT tagEXCEPINFO {
+!   unsigned short wCode;      // An error code describing the error.
+!   Unsigned short wReserved;
+!   BSTR bstrSource;            // Source of the exception.
+!   BSTR bstrDescription;      // Textual description of the error.
+!   BSTR bstrHelpFile;         // Help file path.
+!   Unsigned long dwHelpContext;   // Help context ID.
+!   Void FAR* pvReserved;
+!   // Pointer to function that fills in Help and description info.
+!   HRESULT (STDAPICALLTYPE FAR* pfnDeferredFillIn)
+!         (struct tagEXCEPINFO FAR*);
+!   RETURN VALUE return value;   // A return value describing the error.
+!} EXCEPINFO, FAR* LPEXCEPINFO;
+EXCEPINFO             GROUP,TYPE
+wCode                   USHORT
+wReserved               USHORT
+bstrSource              BSTR
+bstrDescription         BSTR
+bstrHelpFile            BSTR
+dwHelpContext           ULONG
+pvReserved              LONG
+pfnDeferredFillIn       LONG
+Scode                   ULONG
+                      END
+
+!The FeatureInstall property uses one of the following msoFeatureInstall constants.
+!
+!Constant Value Description 
+!msoFeatureInstallNone 0 (Default) An Automation error occurs at run time when uninstalled features are called. 
+!msoFeatureInstallOnDemand 1 The user is prompted to install new features. 
+!msoFeatureInstallOnDemandWithUI 2 The feature is installed automatically and a progress meter is displayed during installation. The user isn't prompted to install new features. 
+msoFeatureInstall                 EQUATE(LONG)
+msoFeatureInstallNone             EQUATE(0)
+msoFeatureInstallOnDemand         EQUATE(1)
+msoFeatureInstallOnDemandWithUI   EQUATE(2)
+
+MsoTriState                       EQUATE(LONG)
+msoCTrue                          EQUATE(1)
+msoFalse                          EQUATE(0)
+msoTriStateMixed                  EQUATE(-2)
+msoTriStateToggle                 EQUATE(-3)
+msoTrue                           EQUATE(-1)
+
+MsoAutomationSecurity             EQUATE(LONG)
+
+MsoFileDialogType                 EQUATE(LONG)
+
+MsoExtraInfoMethod                EQUATE(LONG)
+
+MsoFarEastLineBreakLanguageID     EQUATE(LONG)
+
+MsoLanguageID                     EQUATE(LONG)
+
+MsoEncoding                       EQUATE(LONG)
+
+!Visio
+VisPageSizingBehaviors            EQUATE(LONG)
+
+!Windows Media Player msdxm
+VB_OLE_COLOR                      EQUATE(LONG)
+
+!/* DISPID reserved to indicate an "unknown" name */
+!/* only reserved for data members (properties); reused as a method dispid below */
+!#define  DISPID_UNKNOWN  ( -1 )
+!
+!/* DISPID reserved for the "value" property */
+!#define  DISPID_VALUE  ( 0 )
+!
+!/* The following DISPID is reserved to indicate the param
+! * that is the right-hand-side (or "put" value) of a PropertyPut
+! */
+!#define  DISPID_PROPERTYPUT  ( -3 )
+!
+!/* DISPID reserved for the standard "NewEnum" method */
+!#define  DISPID_NEWENUM  ( -4 )
+!
+!/* DISPID reserved for the standard "Evaluate" method */
+!#define  DISPID_EVALUATE  ( -5 )
+!
+!#define  DISPID_CONSTRUCTOR  ( -6 )
+!
+!#define  DISPID_DESTRUCTOR  ( -7 )
+!
+!#define  DISPID_COLLECT  ( -8 )
+!
+!/* The range -500 through -999 is reserved for Controls */
+!/* The range 0x80010000 through 0x8001FFFF is reserved for Controls */
+!/* The range -5000 through -5499 is reserved for ActiveX Accessability */
+!/* The range -2000 through -2499 is reserved for VB5 */
+!/* The range -3900 through -3999 is reserved for Forms */
+!/* The range -5500 through -5550 is reserved for Forms */
+!/* The remainder of the negative DISPIDs are reserved for future use */
+DISPID_UNKNOWN                  EQUATE(-1)
+DISPID_VALUE                    EQUATE(0)
+DISPID_PROPERTYPUT              EQUATE(-3)
+DISPID_NEWENUM                  EQUATE(-4)
+DISPID_EVALUATE                 EQUATE(-5)
+DISPID_CONSTRUCTOR              EQUATE(-6)
+DISPID_DESTRUCTOR               EQUATE(-7)
+DISPID_COLLECT                  EQUATE(-8)
+
+
+!
+!DataTypeEnum constants from 'adoint.inc' file
+!
+!DataTypeEnum            itemize
+DataTypeEnum              EQUATE(LONG)
+!  INCLUDE('adoint.inc')
+!adEmpty                   equate(0)
+!adTinyInt                 equate(16)
+!adSmallInt                equate(2)
+!adInteger                 equate(3)
+!adBigInt                  equate(20)
+!adUnsignedTinyInt         equate(17)
+!adUnsignedSmallInt        equate(18)
+!adUnsignedInt             equate(19)
+!adUnsignedBigInt          equate(21)
+!adSingle                  equate(4)
+!adDouble                  equate(5)
+!adCurrency                equate(6)
+!adDecimal                 equate(14)
+!adNumeric                 equate(131)
+!adBoolean                 equate(11)
+!adError                   equate(10)
+!adUserDefined             equate(132)
+!adVariant                 equate(12)
+!adIDispatch               equate(9)
+!adIUnknown                equate(13)
+!adGUID                    equate(72)
+!adDate                    equate(7)
+!adDBDate                  equate(133)
+!adDBTime                  equate(134)
+!adDBTimeStamp             equate(135)
+!adBSTR                    equate(8)
+!adChar                    equate(129)
+!adVarChar                 equate(200)
+!adLongVarChar             equate(201)
+!adWChar                   equate(130)
+!adVarWChar                equate(202)
+!adLongVarWChar            equate(203)
+!adBinary                  equate(128)
+!adVarBinary               equate(204)
+!adLongVarBinary           equate(205)
+!adChapter                 equate(136)
+!adFileTime                equate(64)
+!adPropVariant             equate(138)
+!adVarNumeric              equate(139)
+!adArray                   equate(8192)
+!!                        end
+
+!
+!ExecuteOptionEnum constants from 'adoint.inc' file
+!
+!ExecuteOptionEnum       itemize
+ExecuteOptionEnum         EQUATE(LONG)
+!adOptionUnspecified       equate(-1)
+!adAsyncExecute            equate(16)
+!adAsyncFetch              equate(32)
+!adAsyncFetchNonBlocking   equate(64)
+!adExecuteNoRecords        equate(128)
+!!                        end
+
+!
+!DataSourceListener and DataSource interfaces (from msdatsrc.h file)
+!
+!typedef /* [uuid] */  DECLSPEC_UUID("7c0ffab1-cd84-11d0-949a-00a0c91110ed") BSTR DataMember;
+!
+!    MIDL_INTERFACE("7c0ffab2-cd84-11d0-949a-00a0c91110ed")
+!    DataSourceListener : public IUnknown
+!    {
+!    public:
+!        virtual /* [hidden] */ HRESULT STDMETHODCALLTYPE dataMemberChanged( 
+!            /* [in] */ DataMember bstrDM) = 0;
+!        
+!        virtual /* [hidden] */ HRESULT STDMETHODCALLTYPE dataMemberAdded( 
+!            /* [in] */ DataMember bstrDM) = 0;
+!        
+!        virtual /* [hidden] */ HRESULT STDMETHODCALLTYPE dataMemberRemoved( 
+!            /* [in] */ DataMember bstrDM) = 0;
+!        
+!    };
+!
+!    MIDL_INTERFACE("7c0ffab3-cd84-11d0-949a-00a0c91110ed")
+!    DataSource : public IUnknown
+!    {
+!    public:
+!        virtual /* [restricted][hidden] */ HRESULT STDMETHODCALLTYPE getDataMember( 
+!            /* [in] */ DataMember bstrDM,
+!            /* [in] */ REFIID riid,
+!            /* [retval][out] */ IUnknown **ppunk) = 0;
+!        
+!        virtual /* [hidden] */ HRESULT STDMETHODCALLTYPE getDataMemberName( 
+!            /* [in] */ long lIndex,
+!            /* [retval][out] */ DataMember *pbstrDM) = 0;
+!        
+!        virtual /* [hidden] */ HRESULT STDMETHODCALLTYPE getDataMemberCount( 
+!            /* [retval][out] */ long *plCount) = 0;
+!        
+!        virtual /* [hidden] */ HRESULT STDMETHODCALLTYPE addDataSourceListener( 
+!            /* [in] */ DataSourceListener *pDSL) = 0;
+!        
+!        virtual /* [hidden] */ HRESULT STDMETHODCALLTYPE removeDataSourceListener( 
+!            /* [in] */ DataSourceListener *pDSL) = 0;
+!        
+!    };
+DataMember            EQUATE(BSTRING)
+
+IID_DataSourceListener GROUP
+Data1                   LONG(7C0FFAB2h)
+Data2                   SHORT(0CD84h)
+Data3                   SHORT(011D0h)
+Data4                   STRING('<094h><09Ah><0><0A0h><0C9h><11h><10h><0EDh>')
+                      END
+DataSourceListener    INTERFACE(IUnknown),COM,TYPE
+dataMemberChanged         PROCEDURE(DataMember bstrDM),HRESULT,PROC
+dataMemberAdded           PROCEDURE(DataMember bstrDM),HRESULT,PROC
+dataMemberRemoved         PROCEDURE(DataMember bstrDM),HRESULT,PROC
+                      END
+
+IID_DataSource        GROUP
+Data1                   LONG(7C0FFAB3h)
+Data2                   SHORT(0CD84h)
+Data3                   SHORT(011D0h)
+Data4                   STRING('<094h><09Ah><0><0A0h><0C9h><11h><10h><0EDh>')
+                      END
+DataSource            INTERFACE(IUnknown),COM,TYPE
+getDataMember             PROCEDURE(DataMember bstrDM,LONG riid,LONG ppunk),HRESULT,PROC
+getDataMemberName         PROCEDURE(long lIndex,*DataMember pbstrDM),HRESULT,PROC
+getDataMemberCount        PROCEDURE(*long plCount),HRESULT,PROC
+addDataSourceListener     PROCEDURE(*DataSourceListener pDSL),HRESULT,PROC
+removeDataSourceListener  PROCEDURE(*DataSourceListener pDSL),HRESULT,PROC
+                      END
+
+!/* interface IErrorInfo */
+!/* [unique][uuid][object] */ 
+!
+!typedef /* [unique] */ IErrorInfo *LPERRORINFO;
+!
+!
+!EXTERN_C const IID IID_IErrorInfo;
+!
+!#if defined(__cplusplus) && !defined(CINTERFACE)
+!    
+!    MIDL_INTERFACE("1CF2B120-547D-101B-8E65-08002B2BD119")
+!    IErrorInfo : public IUnknown
+!    {
+!    public:
+!        virtual HRESULT STDMETHODCALLTYPE GetGUID( 
+!            /* [out] */ GUID *pGUID) = 0;
+!        
+!        virtual HRESULT STDMETHODCALLTYPE GetSource( 
+!            /* [out] */ BSTR *pBstrSource) = 0;
+!        
+!        virtual HRESULT STDMETHODCALLTYPE GetDescription( 
+!            /* [out] */ BSTR *pBstrDescription) = 0;
+!        
+!        virtual HRESULT STDMETHODCALLTYPE GetHelpFile( 
+!            /* [out] */ BSTR *pBstrHelpFile) = 0;
+!        
+!        virtual HRESULT STDMETHODCALLTYPE GetHelpContext( 
+!            /* [out] */ DWORD *pdwHelpContext) = 0;
+!        
+!    };
+!
+IID_IErrorInfo        GROUP
+Data1                   LONG(1CF2B120h)
+Data2                   SHORT(0547Dh)
+Data3                   SHORT(0101Bh)
+Data4                   STRING('<08Eh><065h><08><0><2Bh><2Bh><0D1h><19h>')
+                      END
+IErrorInfo            INTERFACE(IUnknown),COM,TYPE
+GetGUID                 PROCEDURE(LONG pGUID),HRESULT,PROC
+GetSource               PROCEDURE(*BSTRING pBstrSource),HRESULT,PROC
+GetDescription          PROCEDURE(*BSTRING pBstrDescription),HRESULT,PROC
+GetHelpFile             PROCEDURE(*BSTRING pBstrHelpFile),HRESULT,PROC
+GetHelpContext          PROCEDURE(*DWORD pdwHelpContext),HRESULT,PROC
+                      END
+
+
+!/* interface IEnumVARIANT */
+!/* [unique][uuid][object] */ 
+!
+!typedef /* [unique] */ IEnumVARIANT *LPENUMVARIANT;
+!
+!
+!EXTERN_C const IID IID_IEnumVARIANT;
+!
+!#if defined(__cplusplus) && !defined(CINTERFACE)
+!    
+!    MIDL_INTERFACE("00020404-0000-0000-C000-000000000046")
+!    IEnumVARIANT : public IUnknown
+!    {
+!    public:
+!        virtual /* [local] */ HRESULT STDMETHODCALLTYPE Next( 
+!            /* [in] */ ULONG celt,
+!            /* [length_is][size_is][out] */ VARIANT *rgVar,
+!            /* [out] */ ULONG *pCeltFetched) = 0;
+!        
+!        virtual HRESULT STDMETHODCALLTYPE Skip( 
+!            /* [in] */ ULONG celt) = 0;
+!        
+!        virtual HRESULT STDMETHODCALLTYPE Reset( void) = 0;
+!        
+!        virtual HRESULT STDMETHODCALLTYPE Clone( 
+!            /* [out] */ IEnumVARIANT **ppEnum) = 0;
+!        
+!    };
+IID_IEnumVARIANT      GROUP
+Data1                   LONG(00020404h)
+Data2                   SHORT(0h)
+Data3                   SHORT(0h)
+Data4                   STRING('<0C0h><0h><0><0><0><0><0><46h>')
+                      END
+IEnumVARIANT          INTERFACE(IUnknown),COM,TYPE
+Next                    PROCEDURE(ULONG celt,*VARIANT rgVar,*ULONG pCeltFetched),HRESULT,PROC
+Skip                    PROCEDURE(ULONG celt),HRESULT,PROC
+Reset                   PROCEDURE(),HRESULT,PROC
+Clone                   PROCEDURE(LONG ppEnum),HRESULT,PROC
+                      END
+
+ADRPTR    EQUATE(LONG)
+gDATE     EQUATE(REAL)
+
+! PROPVARIANT
+!typedef struct PROPVARIANT {
+!  VARTYPE vt;
+!  WORD    wReserved1;
+!  WORD    wReserved2;
+!  WORD    wReserved3;
+!  union {
+!    CHAR              cVal;
+!    UCHAR             bVal;
+!    SHORT             iVal;
+!    USHORT            uiVal;
+!    LONG              lVal;
+!    ULONG             ulVal;
+!    INT               intVal;
+!    UINT              uintVal;
+!    LARGE_INTEGER     hVal;
+!    ULARGE_INTEGER    uhVal;
+!    FLOAT             fltVal;
+!    DOUBLE            dblVal;
+!    VARIANT_BOOL      boolVal;
+!    SCODE             scode;
+!    CY                cyVal;
+!    DATE              date;
+!    FILETIME          filetime;
+!    CLSID             *puuid;
+!    CLIPDATA          *pclipdata;
+!    BSTR              bstrVal;
+!    BSTRBLOB          bstrblobVal;
+!    BLOB              blob;
+!    LPSTR             pszVal;
+!    LPWSTR            pwszVal;
+!    IUnknown          *punkVal;
+!    IDispatch         *pdispVal;
+!    IStream           *pStream;
+!    IStorage          *pStorage;
+!    LPVERSIONEDSTREAM pVersionedStream;
+!    LPSAFEARRAY       parray;
+!    CAC               cac;
+!    CAUB              caub;
+!    CAI               cai;
+!    CAUI              caui;
+!    CAL               cal;
+!    CAUL              caul;
+!    CAH               cah;
+!    CAUH              cauh;
+!    CAFLT             caflt;
+!    CADBL             cadbl;
+!    CABOOL            cabool;
+!    CASCODE           cascode;
+!    CACY              cacy;
+!    CADATE            cadate;
+!    CAFILETIME        cafiletime;
+!    CACLSID           cauuid;
+!    CACLIPDATA        caclipdata;
+!    CABSTR            cabstr;
+!    CABSTRBLOB        cabstrblob;
+!    CALPSTR           calpstr;
+!    CALPWSTR          calpwstr;
+!    CAPROPVARIANT     capropvar;
+!    CHAR              *pcVal;
+!    UCHAR             *pbVal;
+!    SHORT             *piVal;
+!    USHORT            *puiVal;
+!    LONG              *plVal;
+!    ULONG             *pulVal;
+!    INT               *pintVal;
+!    UINT              *puintVal;
+!    FLOAT             *pfltVal;
+!    DOUBLE            *pdblVal;
+!    VARIANT_BOOL      *pboolVal;
+!    DECIMAL           *pdecVal;
+!    SCODE             *pscode;
+!    CY                *pcyVal;
+!    DATE              *pdate;
+!    BSTR              *pbstrVal;
+!    IUnknown          **ppunkVal;
+!    IDispatch         **ppdispVal;
+!    LPSAFEARRAY       *pparray;
+!    PROPVARIANT       *pvarVal;
+!  } ;
+!} PROPVARIANT;
+gPropVariant    GROUP(gVariant), TYPE
+                END
+              
+PROPVARIANT     EQUATE(VARIANT)
+REFPROPVARIANT  EQUATE(LONG)  ! const PROPVARIANT * __MIDL_CONST
+
+! PROPERTYKEY
+!typedef struct {
+!  GUID  fmtid;
+!  DWORD pid;
+!} PROPERTYKEY;
+              
+! don't use this group as argument of callback interface!!!
+! these interfaces can't have a RAW attribute so will pass extra hidden len parameter!!!
+! use instead REFPROPERTYKEY and dereference to PROPERTYKEY in the code.
+PROPERTYKEY     GROUP, TYPE
+fmtid             LIKE(GUID)
+pid               ULONG
+                END
+REFPROPERTYKEY  EQUATE(LONG)  ! const PROPERTYKEY * __MIDL_CONST
+
+  !EndOfInclude
